@@ -39,6 +39,9 @@ exports.login = (req, res, next) => {
             if (valid) 
             {
                 const token = jwt.sign({ id, username }, config.secret);
+                res.cookie("t", token, {
+                  expire: new Date() + 9999
+                })
                 return res.status(200).json({
                   id,
                   username,
@@ -58,4 +61,32 @@ exports.logout = (req, res) => {
     return res.status('200').json({
       message: "You have signed out"
     })
- }
+}
+exports.checkToken = (req, res, next)=>{
+  //get authcookie from request
+  const authcookie = req.cookies.t;
+  //verify token which is in cookie value
+  jwt.verify(authcookie,config.secret,(err,data)=>{ 
+  if(err)
+  {   
+    res.sendStatus(403) 
+  } 
+  else if(data.username)
+  {  
+    req.donor = data   
+    next();
+  }
+}) 
+}
+exports.getall = async (req, res) => {
+  try {
+    const users = await db.find();
+
+    return res.status(200).json(users);
+  } catch (err) {
+    return next({
+      status: 400,
+      message: err.message,
+    });
+  }
+}
