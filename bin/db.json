@@ -1,0 +1,52 @@
+[
+    {
+        "name": "Amit",
+        "username": "amitsahu",
+        "password": "sahu",
+        "phone": "6386010971",
+        "email": "amit@gmail.com",
+        "blood_group": "A+",
+        "location": {
+            "type": "Point",
+            "coordinates": [23,24]
+        },
+        "birth_date": "June 30, 2000",
+        "_id": "601aacfcbf80db48a8b1621d"
+    },
+    {
+        "name": "Akshat",
+        "username": "akshatmangal",
+        "password": "mangal",
+        "phone": "9425632607",
+        "email": "akshat@gmail.com",
+        "blood_group": "B+",
+        "location": {
+            "type": "Point",
+            "coordinates": [24,24]
+        },
+        "birth_date": "November 12, 2001"
+    },
+    {
+        "name": "My Hospital",
+        "username": "myhospital",
+        "password": "hostpital",
+        "phone": "2222345678",
+        "email": "myhosp@gmail.com",
+        "location": {
+            "type": "Point",
+            "coordinates": [23.5,23.5]
+        },
+        "_id": "601aad9659755407a094da2c"
+    },
+    {
+        "name": "Your Hospital",
+        "username": "yourhospital",
+        "password": "hostpital",
+        "phone": "2222345678",
+        "email": "yourhosp@gmail.com",
+        "location": {
+            "type": "Point",
+            "coordinates": [23,23]
+        }
+    }
+]

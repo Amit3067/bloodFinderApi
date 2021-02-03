@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const requestSchema = new mongoose.Schema({
-    medOrg_id: {
+    medOrg: {
         type: mongoose.SchemaTypes.ObjectId,
         ref: 'MedOrg',
         required: true
