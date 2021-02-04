@@ -1,13 +1,15 @@
 const mongoose = require('mongoose');
 
 const poolSchema = new mongoose.Schema({
-    request_id: {
-        type: mongoose.SchemaTypes.ObjectId,
-        ref: 'Request'
+    request: {
+        type: mongoose.Types.ObjectId,
+        ref: 'Request',
+        required: true
     },
-    donor_id: {
-        type: mongoose.SchemaTypes.ObjectId,
-        ref: 'Donor'
+    donor: {
+        type: mongoose.Types.ObjectId,
+        ref: 'Donor',
+        required: true
     },
     response: {
         type: String,

@@ -69,7 +69,7 @@ exports.checkToken = (req, res, next)=>{
   jwt.verify(authcookie,config.secret,(err,data)=>{ 
   if(err)
   {   
-    res.sendStatus(403) 
+    res.sendStatus(403);
   } 
   else if(data.username)
   {  
