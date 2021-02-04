@@ -1,4 +1,5 @@
 const db=require('../models/medicalOrg')
+const dbdonor=require('../models/donorsModel')
 const jwt = require('jsonwebtoken');
 const expressJwt = require('express-jwt')
 const config = require('../bin/config');
@@ -73,6 +74,7 @@ exports.checkToken = (req, res, next)=>{
   } 
   else if(data.username)
   {  
+    console.log(data);
     req.medOrg = data  
     next();
   }
@@ -89,3 +91,4 @@ exports.getall = async (req, res) => {
     });
   }
 }
+
