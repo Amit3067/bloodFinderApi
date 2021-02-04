@@ -2,6 +2,7 @@ const db=require('../models/donorsModel')
 const jwt = require('jsonwebtoken');
 const expressJwt = require('express-jwt')
 const config = require('../bin/config');
+
 exports.register =  (req, res, next) => {
         console.log(req.body);
         db.create(req.body)
@@ -27,6 +28,7 @@ exports.register =  (req, res, next) => {
           });
       })
 };
+
 exports.login = (req, res, next) => {
       db.findOne({
         username: req.body.username,
@@ -56,12 +58,14 @@ exports.login = (req, res, next) => {
         return next({ status: 400, message: 'Invalid Username/Password' });
      }) 
  };
+
 exports.logout = (req, res) => {
     res.clearCookie("t")
     return res.status('200').json({
       message: "You have signed out"
     })
-}
+};
+
 exports.checkToken = (req, res, next)=>{
   //get authcookie from request
   const authcookie = req.cookies.t;
@@ -77,7 +81,8 @@ exports.checkToken = (req, res, next)=>{
     next();
   }
 }) 
-}
+};
+
 exports.getall = async (req, res) => {
   try {
     const users = await db.find();
@@ -89,4 +94,4 @@ exports.getall = async (req, res) => {
       message: err.message,
     });
   }
-}
+};
