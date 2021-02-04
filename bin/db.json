@@ -24,7 +24,8 @@
             "type": "Point",
             "coordinates": [24,24]
         },
-        "birth_date": "November 12, 2001"
+        "birth_date": "November 12, 2001",
+        "_id": "601ad2da7702fc64c8a351ec"
     },
     {
         "name": "My Hospital",
@@ -47,6 +48,7 @@
         "location": {
             "type": "Point",
             "coordinates": [23,23]
-        }
+        },
+        "_id": "601ad2a47702fc64c8a351e8"
     }
 ]

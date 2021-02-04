@@ -5,15 +5,19 @@ var medicalrequest = require('../controllers/medicalrequest');
 var router = express.Router();
 
 
-router.post('/register', medicalauth.register);
-router.post('/login', medicalauth.login);
-router.get('/logout', medicalauth.logout);
+router.get('/',medicalauth.checkToken,medicalauth.getall);
+router.post('/register',medicalauth.register);
+router.post('/login',medicalauth.login);
+router.get('/logout',medicalauth.logout);
 
-router.get('/requests', medicalrequest.getGeneratedRequests);
-router.get('/requests', medicalrequest.generateRequest);
+router.get('/requests', medicalauth.checkToken, medicalrequest.getGeneratedRequests);
+router.post('/requests/generate', medicalauth.checkToken, medicalrequest.generateRequest);
+
 router.route('/requests/:req_id')
+.all(medicalauth.checkToken)
 .get(medicalrequest.getGeneratedRequestById)
 .delete(medicalrequest.deleteGeneratedRequest);
 
-router.get('/request/:req_id/responses', medicalrequest.getResponses);
+router.get('/requests/:req_id/responses', medicalauth.checkToken, medicalrequest.getResponses);
+
 module.exports = router;

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const requestSchema = new mongoose.Schema({
     medOrg: {
-        type: mongoose.SchemaTypes.ObjectId,
+        type: mongoose.Types.ObjectId,
         ref: 'MedOrg',
         required: true
     },
