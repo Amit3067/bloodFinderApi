@@ -26,7 +26,6 @@ const requestSchema = new mongoose.Schema({
         default: 'open'
     }
 }, {timestamps: true});
-
 const requestModel = mongoose.model('Request',requestSchema);
 
 module.exports = requestModel;
