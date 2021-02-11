@@ -13,6 +13,9 @@ var donorRouter=require('./routes/donorauth')
 const config = require('./bin/config');
 const mongoose = require('mongoose');
 
+const cors = require('cors');
+const {corsOpts} = require('./cors');
+
 mongoose.connect(config.mongoUrl,{useUnifiedTopology: true, useNewUrlParser: true})
 .then(res => {
   console.log('Connected to database.');
@@ -32,6 +35,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.options('*',cors());
+app.use(corsOpts);
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/med',medRouter);
