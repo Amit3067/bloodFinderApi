@@ -5,30 +5,6 @@ const ddonor= require('../models/donorsModel');
 const dpool = require('../models/requestPoolModel');
 
 exports.incomingrequests = (req,res,next) => {
-  // dpool.find(
-  //   {
-  //     //$match: {
-  //       donor: req.donor.id
-  //   })
-  //   .populate('request')
-    // { 
-    //   $lookup: 
-    //   {
-    //     from: 'Request',
-    //     let: {req_id:'$request',sta:'open'},
-    //     pipeline: [{ $match:
-    //       { $expr:
-    //          { $or:
-    //             [
-    //               { $eq: [ "$_id",  "$$req_id" ] },
-    //               { $eq: [ "$status", "$$sta" ] }
-    //             ]
-    //          }
-    //       }
-    //     }],
-    //     as: 'inbox'
-    //   }
-    // }
     dpool.aggregate([
       {
           $match: {
@@ -78,35 +54,20 @@ exports.incomingrequests = (req,res,next) => {
     }).catch(err => {
         throw err;
     });
-  // const {id, username}= req.donor;
-  //   dpool.find({})
-  //   .populate('request','status')
-  //   .find({
-  //       donor: id,
-  //       response: 'pending',
-  //       //'request.status':'open'
-  //     })
-  //     .then((incomingreqs)=>
-  //     {
-  //         return res.status(200).json({incomingreqs});
-  //     })
-  //     .catch ((err)=>{
-  //       return next({ status: 400, message: 'No incoming request' });
-  //    })
 }
 let curid;
 exports.acceptrequest = (req,res,next) => {
     const req_id= req.params.req_id;
-    //console.log(req.params.req_id);
     dpool.updateOne(
-      //{'_id':curid,$eq:{'units','claimed'}},
+
       {'_id':req_id},
       {$set: {
         "response":"accepted"
       }
+
      })
       .then((bre)=>{
-          console.log('response accepted');
+          //console.log('response accepted');
       })
       .catch((err)=>{
         return next({status: 400,message: err.message})
@@ -125,7 +86,6 @@ exports.acceptrequest = (req,res,next) => {
        })
        .then((breq)=>{
           drequest.updateOne(
-            //{'_id':curid,$eq:{'units','claimed'}},
             {$expr:{$lte:["$units", "$claimed"]}},
             {$set: {
               "status":"close"
@@ -152,9 +112,8 @@ exports.acceptrequest = (req,res,next) => {
 
 exports.rejectrequest= (req,res,next) =>{
   const req_id= req.params.req_id;
-  //console.log(req.params.req_id);
+  
   dpool.updateOne(
-    //{'_id':curid,$eq:{'units','claimed'}},
     {'_id':req_id},
     {$set: {
       "response":"rejected"
@@ -164,7 +123,7 @@ exports.rejectrequest= (req,res,next) =>{
         res.status(200).json({
           bre
         });
-        console.log('response rejected');
+       
     })
     .catch((err)=>{
       return next({status: 400,message: err.message})
