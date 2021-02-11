@@ -14,6 +14,7 @@ exports.register =  (req, res, next) => {
             res.cookie("t", token, {
               expire: new Date() + 9999
             })
+            medOrg.password=undefined
             return res.status(201).json({ token , medOrg
             });
         })
@@ -43,10 +44,10 @@ exports.login = (req, res, next) => {
                 res.cookie("t", token, {
                   expire: new Date() + 9999
                 })
+                donor.password=undefined;
                 return res.status(200).json({
-                  id,
-                  username,
-                  token,
+                  donor,
+                  token
                 });
             } else {
                 return next({ status: 400, message: 'Invalid Password' });

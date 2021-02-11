@@ -4,7 +4,7 @@ const expressJwt = require('express-jwt')
 const config = require('../bin/config');
 
 exports.register =  (req, res, next) => {
-        console.log(req.body);
+    
         db.create(req.body)
         .then((donor)=>
         {
@@ -14,6 +14,7 @@ exports.register =  (req, res, next) => {
             res.cookie("t", token, {
               expire: new Date() + 9999
             })
+            donor.password=undefined;
             return res.status(201).json({ token , donor
             });
         })
@@ -44,10 +45,10 @@ exports.login = (req, res, next) => {
                 res.cookie("t", token, {
                   expire: new Date() + 9999
                 })
+                donor.password=undefined
                 return res.status(200).json({
-                  id,
-                  username,
-                  token,
+                  donor,
+                  token
                 });
             } else {
                 return next({ status: 400, message: 'Invalid Username/Password' });
@@ -86,7 +87,6 @@ exports.checkToken = (req, res, next)=>{
 exports.getall = async (req, res) => {
   try {
     const users = await db.find();
-
     return res.status(200).json(users);
   } catch (err) {
     return next({
