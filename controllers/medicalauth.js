@@ -15,7 +15,7 @@ exports.register =  (req, res, next) => {
               expire: new Date() + 9999
             })
             medOrg.password=undefined
-            return res.status(201).json({ token , medOrg
+            return res.status(201).json({ token , user: {...medOrg, category: 'med'}
             });
         })
         .catch((err) => {
@@ -33,9 +33,9 @@ exports.login = (req, res, next) => {
       db.findOne({
         username: req.body.username,
       })
-      .then((donor)=>{
-        const { id, username } = donor;
-        donor.comparePassword(req.body.password, function(err,valid) {
+      .then((medOrg)=>{
+        const { id, username } = medOrg;
+        medOrg.comparePassword(req.body.password, function(err,valid) {
             if (err) throw err;
             console.log(valid);
             if (valid) 
@@ -44,9 +44,9 @@ exports.login = (req, res, next) => {
                 res.cookie("t", token, {
                   expire: new Date() + 9999
                 })
-                donor.password=undefined;
+                medOrg.password=undefined;
                 return res.status(200).json({
-                  donor,
+                  user: {...medOrg._doc, category: 'med'},
                   token
                 });
             } else {
@@ -59,16 +59,16 @@ exports.login = (req, res, next) => {
      }) 
  };
  exports.logout = (req, res) => {
-    res.clearCookie("t")
+    res.clearCookie("t");
     return res.status('200').json({
       message: "You have signed out"
-    })
+    });
 }
 exports.checkToken = (req, res, next)=>{
-  //get authcookie from request
-  const authcookie = req.cookies.t;
+  //get token from request
+  const token = req.get('Authorization').split(' ')[1];
   //verify token which is in cookie value
-  jwt.verify(authcookie,config.secret,(err,data)=>{ 
+  jwt.verify(token,config.secret,(err,data)=>{ 
   if(err)
   {   
     res.sendStatus(403);
