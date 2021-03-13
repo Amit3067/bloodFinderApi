@@ -60,13 +60,6 @@ exports.login = (req, res, next) => {
      }) 
  };
 
-exports.logout = (req, res) => {
-    res.clearCookie("t")
-    return res.status('200').json({
-      message: "You have signed out"
-    })
-};
-
 exports.checkToken = (req, res, next)=>{
   //get token from request
   const token = req.get('Authorization').split(' ')[1];
