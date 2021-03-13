@@ -8,7 +8,6 @@ var router = express.Router();
 router.get('/',medicalauth.checkToken,medicalauth.getall);
 router.post('/register',medicalauth.register);
 router.post('/login',medicalauth.login);
-router.get('/logout',medicalauth.logout);
 
 router.post('/search',medicalauth.checkToken,search.getneardonor);
 
