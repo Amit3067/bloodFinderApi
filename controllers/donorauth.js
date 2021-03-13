@@ -15,7 +15,7 @@ exports.register =  (req, res, next) => {
               expire: new Date() + 9999
             })
             donor.password=undefined;
-            return res.status(201).json({ token , donor
+            return res.status(201).json({ token , user: {...donor._doc,category:'donor'}
             });
         })
         .catch((err) => {
@@ -47,7 +47,7 @@ exports.login = (req, res, next) => {
                 })
                 donor.password=undefined
                 return res.status(200).json({
-                  donor,
+                  user: {...donor._doc,category:'donor'},
                   token
                 });
             } else {
@@ -68,10 +68,10 @@ exports.logout = (req, res) => {
 };
 
 exports.checkToken = (req, res, next)=>{
-  //get authcookie from request
-  const authcookie = req.cookies.t;
+  //get token from request
+  const token = req.get('Authorization').split(' ')[1];
   //verify token which is in cookie value
-  jwt.verify(authcookie,config.secret,(err,data)=>{ 
+  jwt.verify(token,config.secret,(err,data)=>{ 
   if(err)
   {   
     res.sendStatus(403) 
