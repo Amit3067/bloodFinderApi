@@ -32,6 +32,25 @@ exports.incomingrequests = (req,res,next) => {
           }
       },
       {
+          $lookup: {
+            from: 'medorgs',
+            let: {org_id: '$donorrequest.medOrg'},
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $eq: ['$_id','$$org_id']
+                  }
+                }
+              },
+              {
+                $project: {name:1, location:1, phone:1, email:1}
+              }
+            ],
+            as: "donorrequest.medOrg"
+          }
+      },
+      {
           $group: {
           _id: '$response',
           requests: {
@@ -107,7 +126,6 @@ exports.acceptrequest = (req,res,next) => {
     .catch((err)=>{
       return next({status: 400,message: err.message})
     })
-   
 }
 
 exports.rejectrequest= (req,res,next) =>{
