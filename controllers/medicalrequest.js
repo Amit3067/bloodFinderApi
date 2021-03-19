@@ -56,9 +56,56 @@ module.exports.getGeneratedRequestById = (req,res,next) => {
             throw error;
         }
         else{
-            res.status(200).json({
-                response: request
-            });
+            Pool.aggregate([
+                {
+                    $match: {
+                        request: request[0]._id
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'donors',
+                        // localField: "donor",
+                        // foreignField: "_id",
+                        let: {donor_: '$donor'},
+                        pipeline: [
+                            {
+                                $match: {
+                                    $expr:{
+                                        $eq: ['$_id','$$donor_']
+                                    }
+                                }
+                            },
+                            {
+                                $project: {
+                                    username: 1,
+                                    location: 1,
+                                    phone: 1,
+                                    email: 1
+                                }
+                            }
+                        ],
+                        as: 'donor'
+                    }
+                },
+                {
+                    $unwind: '$donor'
+                },
+                {
+                    $group: {
+                        _id: '$response',
+                        donors: {
+                            $addToSet: "$donor"
+                        }
+                    }
+                }
+            ]).then(reqInfo=> {
+                res.status(200).json({
+                    response: reqInfo
+                });
+            }).catch(err=>{
+                next(err);
+            })
         }
     })
     .catch(err => {
