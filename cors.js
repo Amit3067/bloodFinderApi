@@ -8,7 +8,7 @@ var corsOptions = {
             cb(null,true);
         }
         else{
-            cb(new Error("Not allowed by cors"),false);
+            cb(null,true);
         }
     }
 };

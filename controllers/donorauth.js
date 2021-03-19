@@ -71,7 +71,8 @@ exports.checkToken = (req, res, next)=>{
   } 
   else if(data.username)
   {  
-    req.donor = data   
+    req.donor = data 
+    console.log(req.donor);  
     next();
   }
 }) 
