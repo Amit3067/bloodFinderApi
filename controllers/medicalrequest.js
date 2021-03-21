@@ -81,7 +81,8 @@ module.exports.getGeneratedRequestById = (req,res,next) => {
                                     username: 1,
                                     location: 1,
                                     phone: 1,
-                                    email: 1
+                                    email: 1,
+                                    name: 1
                                 }
                             }
                         ],
@@ -101,7 +102,8 @@ module.exports.getGeneratedRequestById = (req,res,next) => {
                 }
             ]).then(reqInfo=> {
                 res.status(200).json({
-                    response: reqInfo
+                    request: request[0],
+                    responses: reqInfo
                 });
             }).catch(err=>{
                 next(err);
