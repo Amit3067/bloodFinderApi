@@ -67,6 +67,7 @@ exports.incomingrequests = (req,res,next) => {
       }
     ])
     .then(inbox => {
+        console.log(inbox);
         res.status(200).json({
             inbox
         });
@@ -76,49 +77,53 @@ exports.incomingrequests = (req,res,next) => {
 }
 let curid;
 exports.acceptrequest = (req,res,next) => {
+   
     const req_id= req.params.req_id;
+    
+    const filter = {
+      'donor': (req.donor.id),
+      'request': (req_id)
+    };
     dpool.updateOne(
-
-      {'_id':req_id},
-      {$set: {
-        "response":"accepted"
-      }
-
-     })
+          filter,
+          {$set: {
+            "response":"accepted"
+          }
+      })
       .then((bre)=>{
-          //console.log('response accepted');
+          console.log('response accepted');
       })
       .catch((err)=>{
         return next({status: 400,message: err.message})
-      })
-    dpool.find({
-      '_id':req_id
     })
+    dpool.find(
+      filter
+    )
     .then((sreq)=>{
        console.log(sreq);
        curid=sreq[0].request;
        drequest.updateOne(
-         {'_id':sreq[0].request},
-        {$inc: {
-          "claimed":1
-        }
+          {'_id':sreq[0].request},
+          {$inc: {
+            "claimed":1
+          }
        })
        .then((breq)=>{
-          drequest.updateOne(
-            {$expr:{$lte:["$units", "$claimed"]}},
-            {$set: {
-              "status":"close"
-            }
-           })
+            drequest.updateOne(
+              {$expr:{$lte:["$units", "$claimed"]}},
+              {$set: {
+                "status":"close"
+              }
+            })
             .then((bre)=>{
-              res.status(200).json({
-                bre
-              });
+                res.status(200).json({
+                  bre
+                });
             })
             .catch((err)=>{
               return next({status: 400,message: err.message})
             })
-          })
+        })
         .catch((err)=>{
           return next({status: 400,message: err.message})
         })
@@ -130,9 +135,12 @@ exports.acceptrequest = (req,res,next) => {
 
 exports.rejectrequest= (req,res,next) =>{
   const req_id= req.params.req_id;
-  
+  const filter = {
+    'donor': (req.donor.id),
+    'request': (req_id)
+  };
   dpool.updateOne(
-    {'_id':req_id},
+    filter,
     {$set: {
       "response":"rejected"
     }
@@ -141,7 +149,6 @@ exports.rejectrequest= (req,res,next) =>{
         res.status(200).json({
           bre
         });
-       
     })
     .catch((err)=>{
       return next({status: 400,message: err.message})
