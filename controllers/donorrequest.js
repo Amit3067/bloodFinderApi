@@ -84,6 +84,7 @@ exports.acceptrequest = (req,res,next) => {
       'donor': (req.donor.id),
       'request': (req_id)
     };
+    
     dpool.updateOne(
           filter,
           {$set: {
@@ -109,8 +110,9 @@ exports.acceptrequest = (req,res,next) => {
           }
        })
        .then((breq)=>{
+            //console.log(breq);
             drequest.updateOne(
-              {$expr:{$lte:["$units", "$claimed"]}},
+              {'_id':sreq[0].request,$expr: { $lte: [ "$units" , "$claimed" ] } },
               {$set: {
                 "status":"close"
               }
