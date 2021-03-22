@@ -10,12 +10,11 @@ exports.register =  (req, res, next) => {
         {
             const { id, username } = medOrg;
             const token = jwt.sign({ id, username },config.secret);
-            console.log(token);
             res.cookie("t", token, {
               expire: new Date() + 9999
             })
-            medOrg.password=undefined
-            return res.status(201).json({ token , user: {...medOrg, category: 'med'}
+            medOrg.password=undefined;
+            return res.status(201).json({ token , user: {...medOrg._doc, category: 'med'}
             });
         })
         .catch((err) => {
