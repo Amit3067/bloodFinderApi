@@ -64,7 +64,7 @@ medOrgSchema.pre('save', function(next) {
      
 medOrgSchema.methods.comparePassword = function(candidatePassword, cb) {
     bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
-        console.log(isMatch);
+        //console.log(isMatch);
         if (err) return cb(err);
         cb(null, isMatch);
     });

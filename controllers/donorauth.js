@@ -10,7 +10,7 @@ exports.register =  (req, res, next) => {
         {
             const { id, username } = donor;
             const token = jwt.sign({ id, username },config.secret);
-            console.log(token);
+            //console.log(token);
             res.cookie("t", token, {
               expire: new Date() + 9999
             })
@@ -38,7 +38,7 @@ exports.login = (req, res, next) => {
         const { id, username } = donor;
         donor.comparePassword(req.body.password, function(err,valid) {
             if (err) throw err;
-            console.log(valid);
+            //console.log(valid);
             if (valid) 
             {
                 const token = jwt.sign({ id, username }, config.secret);
@@ -72,7 +72,7 @@ exports.checkToken = (req, res, next)=>{
   else if(data.username)
   {  
     req.donor = data 
-    console.log(req.donor);  
+    //console.log(req.donor);  
     next();
   }
 }) 

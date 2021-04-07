@@ -58,13 +58,13 @@ exports.getneardonor =  (req, res, next) => {
       .then((donors)=>
       {
         getblood(req.body.blood);
-        console.log(req.body.blood);
+        //console.log(req.body.blood);
         var availdonors = new Array();
         donors.map((donor)=>{
           if(arr.find((bgroup) => bgroup == donor.blood_group))
           {
             availdonors.push(donor);
-            console.log(donor.blood_group);
+            //console.log(donor.blood_group);
           }
         })
         return res.status(200).json({availdonors});

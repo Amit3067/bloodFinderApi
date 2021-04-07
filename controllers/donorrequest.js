@@ -67,7 +67,7 @@ exports.incomingrequests = (req,res,next) => {
       }
     ])
     .then(inbox => {
-        console.log(inbox);
+        //console.log(inbox);
         res.status(200).json({
             inbox
         });
@@ -92,7 +92,7 @@ exports.acceptrequest = (req,res,next) => {
           }
       })
       .then((bre)=>{
-          console.log('response accepted');
+          //console.log('response accepted');
       })
       .catch((err)=>{
         return next({status: 400,message: err.message})
@@ -101,7 +101,7 @@ exports.acceptrequest = (req,res,next) => {
       filter
     )
     .then((sreq)=>{
-       console.log(sreq);
+       //console.log(sreq);
        curid=sreq[0].request;
        drequest.updateOne(
           {'_id':sreq[0].request},
