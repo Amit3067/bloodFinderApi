@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const expressJwt = require('express-jwt')
 const config = require('../bin/config');
 exports.register =  (req, res, next) => {
-        console.log(req.body);
+        //console.log(req.body);
         db.create(req.body)
         .then((medOrg)=>
         {
@@ -36,7 +36,7 @@ exports.login = (req, res, next) => {
         const { id, username } = medOrg;
         medOrg.comparePassword(req.body.password, function(err,valid) {
             if (err) throw err;
-            console.log(valid);
+            //console.log(valid);
             if (valid) 
             {
                 const token = jwt.sign({ id, username },config.secret);
@@ -69,7 +69,7 @@ exports.checkToken = (req, res, next)=>{
   } 
   else if(data.username)
   {  
-    console.log(data);
+    //console.log(data);
     req.medOrg = data  
     next();
   }
