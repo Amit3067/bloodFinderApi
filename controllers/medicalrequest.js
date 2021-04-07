@@ -4,7 +4,6 @@ const Request = require('../models/requestModel');
 const Pool = require('../models/requestPoolModel');
 
 module.exports.getGeneratedRequests = (req,res,next) => {
-    console.log(req.medOrg);
     Request.aggregate([{$match: {medOrg: mongoose.Types.ObjectId(req.medOrg.id) }}, {$sort: {status:-1, createdAt: -1}}]).then(reqs => {
         res.status(200).json({
             response: reqs
@@ -23,9 +22,7 @@ module.exports.generateRequest = (req,res,next) => {
     var donors_list = req.body.donors_list;
     
     Request.insertMany(newReq).then(request => {
-        console.log(request);
         var req_id = request[0]._id;
-        console.log(req_id);
         var poolRequest = donors_list.map(donor => {
             return {
                 donor: donor,
@@ -49,7 +46,6 @@ module.exports.generateRequest = (req,res,next) => {
 
 module.exports.getGeneratedRequestById = (req,res,next) => {
     Request.find({_id: req.params.req_id, medOrg: req.medOrg.id}).then(request => {
-        console.log(request);
         if(!request.length){
             var error = new Error('No such request found!');
             error.code = 400;
@@ -67,7 +63,7 @@ module.exports.getGeneratedRequestById = (req,res,next) => {
                         from: 'donors',
                         // localField: "donor",
                         // foreignField: "_id",
-                        let: {donor_: '$donor'},
+                        let: {donor_: '$donor', status_:'$response'},
                         pipeline: [
                             {
                                 $match: {
@@ -80,8 +76,24 @@ module.exports.getGeneratedRequestById = (req,res,next) => {
                                 $project: {
                                     username: 1,
                                     location: 1,
-                                    phone: 1,
-                                    email: 1,
+                                    phone: {
+                                        $cond:{
+                                            if:{
+                                                $eq:['$$status_','accepted']
+                                            },
+                                            then:'$phone',
+                                            else: '$false'
+                                      }
+                                    },
+                                    email: {
+                                        $cond:{
+                                            if:{
+                                            $eq:['$$status_','accepted']
+                                            },
+                                            then:'$email',
+                                            else: '$false'
+                                      }
+                                    },
                                     name: 1
                                 }
                             }
@@ -118,11 +130,7 @@ module.exports.getGeneratedRequestById = (req,res,next) => {
 module.exports.deleteGeneratedRequest = (req,res,next) => {
     Request.deleteOne({_id: req.params.req_id, medOrg: req.medOrg.id})
     .then(val => {
-        console.log("Request");
-        console.log(val);
-        console.log(req.params.req_id);
         Pool.deleteMany({request: mongoose.Types.ObjectId(req.params.req_id)}).then(val => {
-            console.log(val);
             res.status(200).json({
                 response: 'Request has been successfully deleted.'
             });
@@ -138,7 +146,6 @@ module.exports.deleteGeneratedRequest = (req,res,next) => {
 module.exports.getResponses = (req,res,next) => {
     Request.find({_id: req.params.req_id, medOrg: req.medOrg.id})
     .then(reqs => {
-        console.log(!reqs.lentgh);
         if(!reqs.length){
             var error = new Error('No such request found!');
             error.code = 400;
