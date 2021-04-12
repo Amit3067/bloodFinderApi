@@ -1,10 +1,10 @@
 const cors = require('cors');
 
-const whitelist = ['http://localhost:3001','http://localhost:3000']
+const whitelist = ['http://localhost:3001','http://localhost:3000','https://ofactor.netlify.app']
 
 var corsOptions = {
     origin : (origin, cb) => {
-        if(whitelist.indexOf(origin)!=-1){
+        if(whitelist.indexOf(origin)!==-1){
             cb(null,true);
         }
         else{
